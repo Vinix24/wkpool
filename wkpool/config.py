@@ -37,12 +37,14 @@ def _merge(base: dict, override: dict) -> dict:
 
 
 def load_weights(path: Path | None = None) -> dict:
-    path = path or ROOT / "weights.yaml"
-    if path.exists():
-        with open(path) as f:
-            user = yaml.safe_load(f) or {}
-        return _merge(DEFAULTS, user)
-    return dict(DEFAULTS)
+    """DEFAULTS < weights.yaml < weights.local.yaml (gitignored, your edge)."""
+    weights = dict(DEFAULTS)
+    paths = [path] if path else [ROOT / "weights.yaml", ROOT / "weights.local.yaml"]
+    for p in paths:
+        if p.exists():
+            with open(p) as f:
+                weights = _merge(weights, yaml.safe_load(f) or {})
+    return weights
 
 
 def load_env(path: Path | None = None) -> None:

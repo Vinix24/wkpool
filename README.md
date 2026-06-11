@@ -61,6 +61,10 @@ every run**, so your probabilities stay honest no matter how exotic your
 weights get. That re-fit is not optional politeness — uncalibrated
 probabilities silently corrupt every downstream simulation.
 
+Want to keep your tuning private? Put overrides in `weights.local.yaml`
+(gitignored, merged on top) — same for plugins in `plugins_user/`. The
+interface is public; your edge is yours.
+
 ## Bring your own information: plugins
 
 A plugin turns any information source into rating-point adjustments:

@@ -50,3 +50,12 @@ def test_stale_news_is_ignored(tmp_path, monkeypatch):
               "injuries": [{"player": "X", "status": "out"}]}
     (tmp_path / f"{_slug('Brazil')}.json").write_text(json.dumps(report))
     assert InjuryPlugin().adjustments(["Brazil"], DEFAULTS) == {}
+
+
+def test_local_overrides_win(tmp_path, monkeypatch):
+    import wkpool.config as cfg
+    monkeypatch.setattr(cfg, "ROOT", tmp_path)
+    (tmp_path / "weights.yaml").write_text("ratings:\n  k_world_cup: 70\n")
+    (tmp_path / "weights.local.yaml").write_text("ratings:\n  k_world_cup: 80\n")
+    w = cfg.load_weights()
+    assert w["ratings"]["k_world_cup"] == 80

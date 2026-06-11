@@ -6,6 +6,10 @@ data/
 output/
 models/
 
+# Your private plugins and weights — your edge stays yours
+plugins_user/
+weights.local.yaml
+
 # Python
 __pycache__/
 *.pyc
