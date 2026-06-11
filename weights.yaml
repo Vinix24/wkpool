@@ -1,0 +1,44 @@
+# wkpool — user-tunable weights.
+#
+# This file is the knob panel. Fork the repo, change these numbers, run
+# `wkpool daily`, and you have your own predictor. The probability
+# calibration is re-fitted automatically on every run, so changed weights
+# always produce honest probabilities.
+
+ratings:
+  # Elo K-factors per match importance (eloratings.net conventions)
+  k_world_cup: 60
+  k_continental: 50        # continental finals (Euro, Copa America, AFCON, ...)
+  k_qualifier: 40
+  k_nations_league: 30
+  k_friendly: 20
+  home_advantage: 100      # rating points added for a real (non-neutral) home team
+
+form:
+  half_life_days: 1095     # exponential decay: a match this many days old counts half
+                           # (best value found by Groll et al. 2019 on 2002-2017 data)
+
+# Multipliers on the rating-point adjustments produced by feature plugins.
+# 0.0 disables a plugin entirely. Add your own plugin under wkpool/plugins/
+# (or plugins_user/) and give it a weight here.
+plugin_weights:
+  injuries: 1.0
+  climate: 0.0             # experimental, no proven effect — off by default
+
+injuries:
+  points_per_out: 12       # Elo penalty per likely starter reported out
+  points_per_doubtful: 6   # Elo penalty per doubtful player
+  max_news_age_days: 5     # ignore news files older than this
+
+climate:
+  warm_bonus_points: 15    # bonus for warm-climate teams (only if weight > 0)
+
+simulation:
+  n_sims: 20000            # Monte Carlo tournament runs (100000 for paper-grade)
+  max_goals: 12            # cap on sampled goals per side
+  extra_time_factor: 0.33  # expected-goal scaling in extra time (Groll/Zeileis design)
+  seed: null               # set an int for reproducible simulations
+
+model:
+  train_since: "1993-01-01"   # FIFA ranking era; enough history for stable ratings
+  eval_holdout_since: "2024-06-01"  # out-of-sample window reported at train time

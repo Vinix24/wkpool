@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wkpool"
+version = "0.1.0"
+description = "Open-source FIFA World Cup 2026 predictor with user-tunable weights, built to win your office pool"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "scikit-learn>=1.4",
+    "pyyaml>=6.0",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+wkpool = "wkpool.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["wkpool*"]
