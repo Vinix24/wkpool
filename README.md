@@ -146,11 +146,23 @@ leakage-free by construction.
 | Official FIFA schedule | groups, 72 fixtures, knockout bracket (static facts in `wkpool/schedule.py`) |
 | Perplexity API (optional) | structured daily team news |
 
+## Commands
+
+| Command | What it does |
+|---|---|
+| `wkpool daily` | full pipeline: download → train → predict → simulate → `PREDICTIONS.md` |
+| `wkpool daily --with-news` | same, plus a fresh news sweep first |
+| `wkpool download [--force]` | just refresh the results data |
+| `wkpool news [team ...]` | fetch structured team news (default: all 48 teams) |
+| `wkpool simulate [--sims N]` | tournament Monte Carlo only, prints the top 15 |
+| `wkpool score` | accuracy + RPS of your logged pre-match predictions |
+| `scripts/install_launchd.sh [H] [M]` | macOS: run daily at H:M with a notification, optional self-mail and auto-push |
+
 ## Development
 
 ```bash
 pip install -e ".[dev]"
-pytest                   # 21 tests, incl. all 495 third-place combinations
+pytest                   # 22 tests, incl. all 495 third-place combinations
 ```
 
 PRs welcome — especially new plugins, an odds adapter, and pool-strategy
