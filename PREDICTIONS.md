@@ -1,6 +1,6 @@
 # WK 2026 — Predictions
 
-_Generated 2026-06-11 17:41 by [wkpool](https://github.com/Vinix24/wkpool). Probabilities are isotonic-calibrated; weights in `weights.yaml`._
+_Generated 2026-06-12 09:15 by [wkpool](https://github.com/Vinix24/wkpool). Probabilities are isotonic-calibrated; weights in `weights.yaml`._
 
 Model holdout (since 2024-06-01): **61.0% accuracy**, RPS 0.1666 on 2221 matches.
 
@@ -8,24 +8,24 @@ Model holdout (since 2024-06-01): **61.0% accuracy**, RPS 0.1666 on 2221 matches
 
 | Team | Group | P(R16) | P(QF) | P(SF) | P(final) | P(champion) |
 |---|---|---|---|---|---|---|
-| Spain | H | 76.8% | 57.5% | 45.3% | 32.7% | **22.4%** |
-| Argentina | J | 64.0% | 49.1% | 34.0% | 22.0% | **13.4%** |
-| France | I | 70.9% | 48.1% | 31.8% | 17.8% | **10.1%** |
-| England | L | 67.1% | 42.2% | 26.1% | 14.7% | **7.6%** |
-| Colombia | K | 61.6% | 35.9% | 21.0% | 12.1% | **6.0%** |
-| Ecuador | E | 62.2% | 34.1% | 19.4% | 9.2% | **4.4%** |
-| Portugal | K | 56.2% | 30.1% | 16.5% | 8.6% | **4.2%** |
-| Brazil | C | 58.0% | 33.3% | 17.6% | 8.5% | **4.1%** |
-| Mexico | A | 62.9% | 33.9% | 17.5% | 8.3% | **3.8%** |
-| Germany | E | 54.8% | 27.9% | 14.3% | 6.0% | **2.6%** |
-| Canada | B | 60.2% | 29.4% | 12.5% | 5.3% | **2.2%** |
-| Netherlands | F | 49.8% | 27.3% | 12.6% | 5.2% | **2.0%** |
+| Spain | H | 76.2% | 57.1% | 44.9% | 32.0% | **22.1%** |
+| Argentina | J | 64.7% | 49.1% | 33.7% | 21.8% | **12.9%** |
+| France | I | 70.0% | 47.1% | 30.9% | 17.8% | **10.2%** |
+| England | L | 66.7% | 39.7% | 24.7% | 14.6% | **7.7%** |
+| Mexico | A | 70.0% | 41.4% | 24.3% | 12.7% | **6.3%** |
+| Colombia | K | 61.5% | 36.1% | 20.9% | 11.8% | **5.8%** |
+| Ecuador | E | 62.3% | 34.9% | 19.1% | 8.9% | **4.2%** |
+| Portugal | K | 56.1% | 29.9% | 16.3% | 8.3% | **3.9%** |
+| Brazil | C | 57.2% | 32.5% | 16.9% | 7.8% | **3.6%** |
+| Germany | E | 55.7% | 28.9% | 14.4% | 6.2% | **2.6%** |
+| Netherlands | F | 50.1% | 27.2% | 12.5% | 5.3% | **2.3%** |
+| Canada | B | 58.8% | 28.7% | 12.4% | 5.2% | **2.1%** |
 
 ## Upcoming group matches
 
 | Date | Grp | Match | P(1) | P(X) | P(2) | Likely score |
 |---|---|---|---|---|---|---|
-| 2026-06-11 | A | Mexico – South Africa | 78% | 15% | 6% | 2-0 |
+| 2026-06-11 | A | Mexico – South Africa | 81% | 12% | 6% | 2-0 |
 | 2026-06-12 | A | South Korea – Czech Republic | 48% | 26% | 26% | 1-1 |
 | 2026-06-12 | B | Canada – Bosnia and Herzegovina | 75% | 17% | 8% | 2-0 |
 | 2026-06-13 | D | United States – Paraguay | 37% | 25% | 38% | 1-1 |
@@ -49,10 +49,10 @@ Model holdout (since 2024-06-01): **61.0% accuracy**, RPS 0.1666 on 2221 matches
 | 2026-06-17 | L | England – Croatia | 55% | 25% | 21% | 1-0 |
 | 2026-06-18 | L | Ghana – Panama | 15% | 24% | 61% | 0-1 |
 | 2026-06-18 | K | Uzbekistan – Colombia | 15% | 24% | 61% | 0-1 |
-| 2026-06-18 | A | Czech Republic – South Africa | 51% | 24% | 25% | 1-0 |
+| 2026-06-18 | A | Czech Republic – South Africa | 58% | 20% | 22% | 1-0 |
 | 2026-06-18 | B | Switzerland – Bosnia and Herzegovina | 77% | 15% | 7% | 2-0 |
 | 2026-06-18 | B | Canada – Qatar | 79% | 16% | 5% | 2-0 |
-| 2026-06-19 | A | Mexico – South Korea | 57% | 23% | 19% | 1-0 |
+| 2026-06-19 | A | Mexico – South Korea | 67% | 21% | 12% | 1-0 |
 | 2026-06-19 | D | United States – Australia | 45% | 25% | 30% | 1-1 |
 | 2026-06-19 | C | Scotland – Morocco | 21% | 27% | 52% | 0-1 |
 | 2026-06-20 | C | Brazil – Haiti | 77% | 15% | 7% | 2-0 |
@@ -77,8 +77,8 @@ Model holdout (since 2024-06-01): **61.0% accuracy**, RPS 0.1666 on 2221 matches
 | 2026-06-24 | B | Bosnia and Herzegovina – Qatar | 47% | 22% | 31% | 1-1 |
 | 2026-06-24 | C | Morocco – Haiti | 63% | 27% | 10% | 1-0 |
 | 2026-06-24 | C | Scotland – Brazil | 16% | 27% | 57% | 0-1 |
-| 2026-06-25 | A | South Africa – South Korea | 19% | 26% | 55% | 0-1 |
-| 2026-06-25 | A | Czech Republic – Mexico | 16% | 28% | 56% | 0-1 |
+| 2026-06-25 | A | South Africa – South Korea | 16% | 24% | 59% | 0-1 |
+| 2026-06-25 | A | Czech Republic – Mexico | 13% | 27% | 60% | 0-1 |
 | 2026-06-25 | E | Curaçao – Ivory Coast | 20% | 25% | 55% | 0-1 |
 | 2026-06-25 | E | Ecuador – Germany | 47% | 23% | 30% | 1-1 |
 | 2026-06-26 | F | Tunisia – Netherlands | 15% | 22% | 62% | 0-1 |
