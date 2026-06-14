@@ -68,6 +68,11 @@ def cmd_odds(args, weights):
     sources.fetch_outright_odds()
 
 
+def cmd_mine(args, weights):
+    from . import mine
+    mine.run(weights, n_sims=args.sims)
+
+
 def cmd_simulate(args, weights):
     df, outcome, goal_model, ratings, forms, played, metrics = _prepare(weights)
     n_sims = args.sims or int(weights["simulation"]["n_sims"])
@@ -132,6 +137,10 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("odds", help="fetch bookmaker outright odds (The Odds API)")
     p.set_defaults(func=cmd_odds)
+
+    p = sub.add_parser("mine", help="private predictions (your weights) + change report")
+    p.add_argument("--sims", type=int)
+    p.set_defaults(func=cmd_mine)
 
     p = sub.add_parser("simulate", help="Monte Carlo tournament simulation")
     p.add_argument("--sims", type=int)

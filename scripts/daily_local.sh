@@ -19,7 +19,7 @@ if ./.venv/bin/wkpool daily --force --with-news --public >> "$LOG" 2>&1; then
     [ -z "$TIPS" ] && TIPS="Geen wedstrijden vandaag"
     SCORE=$(./.venv/bin/wkpool score 2>/dev/null | tail -1)
 
-    # publish the living document: commit today's diffs and push
+    # publish the living document for the world: commit public diffs and push
     if git remote get-url origin > /dev/null 2>&1; then
         git add PREDICTIONS.md NEWS.md TRACK_RECORD.md track_record.jsonl
         if ! git diff --cached --quiet; then
@@ -28,7 +28,10 @@ if ./.venv/bin/wkpool daily --force --with-news --public >> "$LOG" 2>&1; then
         fi
     fi
 
-    # optional: mail the report to yourself (configure MAIL_TO/SMTP_* in .env)
+    # private pass with YOUR weights -> change report for your own pool entry
+    ./.venv/bin/wkpool mine >> "$LOG" 2>&1 || true
+
+    # mail your prediction changes (only when something moved; needs SMTP in .env)
     ./.venv/bin/python scripts/mail_predictions.py >> "$LOG" 2>&1 || true
 
     osascript -e "display notification \"$TIPS\" with title \"WK-tips $TODAY\" subtitle \"$SCORE\" sound name \"Glass\""

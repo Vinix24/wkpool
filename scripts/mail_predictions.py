@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Mail PREDICTIONS.md to yourself after the daily run.
+"""Mail your private prediction changes to yourself after the daily run.
+
+Mails output/changes.md (what moved in YOUR predictions since the last run,
+from `wkpool mine`) with the full private list appended, so you only get a
+mail when there's something to re-enter in your pool. Falls back to the
+public PREDICTIONS.md if no change report exists.
 
 Configure in .env (all required to activate; without them this is a no-op):
     MAIL_TO=you@example.com
@@ -24,6 +29,10 @@ sys.path.insert(0, str(ROOT))
 
 from wkpool.config import load_env  # noqa: E402
 
+CHANGES = ROOT / "output" / "changes.md"
+PRIVATE = ROOT / "PREDICTIONS.local.md"
+PUBLIC = ROOT / "PREDICTIONS.md"
+
 
 def main() -> int:
     load_env()
@@ -35,9 +44,20 @@ def main() -> int:
         print("mail not configured (MAIL_TO/SMTP_USER/SMTP_PASS) — skipping")
         return 0
 
-    body = (ROOT / "PREDICTIONS.md").read_text()
+    if CHANGES.exists():
+        subject = f"WK-tips bijgewerkt {date.today().isoformat()}"
+        body = CHANGES.read_text()
+        if PRIVATE.exists():
+            body += "\n\n---\n\n" + PRIVATE.read_text()
+    elif "--always" in sys.argv and PUBLIC.exists():
+        subject = f"WK-tips {date.today().isoformat()}"
+        body = PUBLIC.read_text()
+    else:
+        print("no prediction changes — no mail sent")
+        return 0
+
     msg = MIMEText(body, "plain", "utf-8")
-    msg["Subject"] = f"WK-tips {date.today().isoformat()}"
+    msg["Subject"] = subject
     msg["From"] = user
     msg["To"] = to
 
@@ -46,7 +66,7 @@ def main() -> int:
     with smtplib.SMTP_SSL(host, port, context=ssl.create_default_context()) as smtp:
         smtp.login(user, password)
         smtp.send_message(msg)
-    print(f"mailed PREDICTIONS.md to {to}")
+    print(f"mailed '{subject}' to {to}")
     return 0
 
 

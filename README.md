@@ -131,9 +131,13 @@ itself the proof that the system works:
 
 The committed daily run uses the **public default weights** (`--public`), so
 what you publish never leaks your own tuning. Your edge lives in
-`weights.local.yaml` and `plugins_user/` — both gitignored. Run `wkpool daily`
-without `--public` locally to predict with your private weights; just don't
-commit the result.
+`weights.local.yaml` and `plugins_user/` — both gitignored.
+
+`wkpool mine` runs the pipeline with your private weights, writes a gitignored
+`PREDICTIONS.local.md`, and diffs against the previous private run. The daily
+script then mails you `output/changes.md` — only when a tip flipped or a
+probability moved — so you know exactly what to re-enter in your actual pool,
+while the public `PREDICTIONS.md` keeps updating for everyone to watch.
 
 ## Recalibration during the tournament
 
@@ -182,6 +186,7 @@ leakage-free by construction.
 | `wkpool download [--force]` | just refresh the results data |
 | `wkpool news [team ...]` | fetch structured team news (default: all 48 teams) |
 | `wkpool odds` | fetch bookmaker outright odds (The Odds API) |
+| `wkpool mine [--sims N]` | private predictions with your weights + day-to-day change report |
 | `wkpool simulate [--sims N]` | tournament Monte Carlo only, prints the top 15 |
 | `wkpool score` | accuracy + RPS of your logged pre-match predictions |
 | `scripts/install_launchd.sh ["H:M H:M"]` | macOS: run at those times daily (default 09:15 + 15:15) with notification, self-mail, auto-push |
