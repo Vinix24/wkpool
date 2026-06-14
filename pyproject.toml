@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wkpool"
-version = "0.1.0"
+version = "0.2.0"
 description = "Open-source FIFA World Cup 2026 predictor with user-tunable weights, built to win your office pool"
 readme = "README.md"
 requires-python = ">=3.10"

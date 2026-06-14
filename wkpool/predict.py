@@ -112,7 +112,7 @@ def write_report(preds: pd.DataFrame, sim_df: pd.DataFrame | None,
     lines = [
         "# WK 2026 — Predictions",
         "",
-        f"_Generated {now} by [wkpool](https://github.com/Vinix24/wkpool). "
+        f"_Generated {now} by [wkpool](https://github.com/Vinix24/world-cup-2026-predictor). "
         "Probabilities are isotonic-calibrated; weights in `weights.yaml`._",
         "",
     ]

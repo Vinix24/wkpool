@@ -30,8 +30,9 @@ class FeaturePlugin(Protocol):
 def load_plugins() -> list:
     from .injuries import InjuryPlugin
     from .climate import ClimatePlugin
+    from .odds import OddsPlugin
 
-    plugins: list = [InjuryPlugin(), ClimatePlugin()]
+    plugins: list = [InjuryPlugin(), ClimatePlugin(), OddsPlugin()]
 
     user_dir = ROOT / "plugins_user"
     if user_dir.is_dir():

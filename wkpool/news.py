@@ -56,6 +56,46 @@ def _slug(team: str) -> str:
     return team.lower().replace(" ", "_")
 
 
+def merge_persisted(old: dict | None, new: dict, today: dt.date,
+                    persist_days: int) -> dict:
+    """Carry forward recent injuries the fresh report dropped, to dampen the
+    day-to-day noise of LLM news scraping.
+
+    An injury seen on a previous day stays in the report (flagged persisted)
+    until it is either explicitly reported "returned", or `persist_days` have
+    passed since it was first seen. Players present in the fresh report always
+    win (their status and first_seen are authoritative).
+    """
+    today_iso = today.isoformat()
+    merged = {}
+    for inj in new.get("injuries", []):
+        name = inj.get("player")
+        if not name:
+            continue
+        inj.setdefault("first_seen", today_iso)
+        merged[name] = inj
+
+    returned_today = {i["player"] for i in new.get("injuries", [])
+                      if i.get("status") == "returned" and i.get("player")}
+
+    for inj in (old or {}).get("injuries", []):
+        name = inj.get("player")
+        if not name or name in merged or name in returned_today:
+            continue
+        if inj.get("status") not in ("out", "doubtful"):
+            continue
+        first = inj.get("first_seen", inj.get("source_date") or today_iso)
+        try:
+            age = (today - dt.date.fromisoformat(str(first)[:10])).days
+        except ValueError:
+            age = 0
+        if age <= persist_days:
+            merged[name] = {**inj, "first_seen": first, "persisted": True}
+
+    new["injuries"] = list(merged.values())
+    return new
+
+
 def _extract_json(text: str) -> dict:
     start, end = text.find("{"), text.rfind("}")
     if start < 0 or end <= start:
@@ -159,7 +199,7 @@ def render_digest(today: dt.date | None = None) -> None:
     print(f"wrote {ROOT / 'NEWS.md'}")
 
 
-def fetch_all(teams: list[str]) -> int:
+def fetch_all(teams: list[str], persist_days: int = 3) -> int:
     """Fetch news for the given teams; returns number of teams fetched."""
     api_key = os.environ.get("PERPLEXITY_API_KEY", "").strip()
     if not api_key:
@@ -169,13 +209,22 @@ def fetch_all(teams: list[str]) -> int:
     today = dt.date.today()
     done = 0
     for team in teams:
+        path = NEWS_DIR / f"{_slug(team)}.json"
         try:
             report = fetch_team(team, api_key, today)
             report.setdefault("as_of", today.isoformat())
-            (NEWS_DIR / f"{_slug(team)}.json").write_text(
-                json.dumps(report, indent=2, ensure_ascii=False))
-            n_inj = len(report.get("injuries", []))
-            print(f"  {team}: {n_inj} injury item(s), "
+            old = None
+            if path.exists():
+                try:
+                    old = json.loads(path.read_text())
+                except json.JSONDecodeError:
+                    old = None
+            report = merge_persisted(old, report, today, persist_days)
+            path.write_text(json.dumps(report, indent=2, ensure_ascii=False))
+            inj = report.get("injuries", [])
+            carried = sum(1 for i in inj if i.get("persisted"))
+            print(f"  {team}: {len(inj)} injury item(s)"
+                  f"{f' ({carried} carried)' if carried else ''}, "
                   f"volume={report.get('data_quality', {}).get('news_volume', '?')}")
             done += 1
         except Exception as exc:  # one team failing must not kill the run

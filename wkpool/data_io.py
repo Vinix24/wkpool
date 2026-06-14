@@ -33,7 +33,7 @@ def download(force: bool = False) -> None:
     print(f"downloaded {len(resp.content)//1024} KB -> {RESULTS_CSV}")
 
 
-def load_results() -> pd.DataFrame:
+def load_results(with_fallback: bool = True) -> pd.DataFrame:
     if not RESULTS_CSV.exists():
         download()
     df = pd.read_csv(RESULTS_CSV)
@@ -48,6 +48,10 @@ def load_results() -> pd.DataFrame:
         raise ValueError(
             f"2026 squad names not found in dataset (naming drift?): {missing}"
         )
+
+    if with_fallback:  # close the martj42 lag with a faster WC results feed
+        from . import sources
+        df = sources.merge_results(df, sources.fetch_results_fallback())
     return df
 
 

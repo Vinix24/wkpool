@@ -17,7 +17,6 @@ curve cannot be cherry-picked afterwards. Hits and misses both.
 
 ### 2026-06-14
 - Score so far: 4 matches, 50% correct, RPS 0.1851
-- Newly decided: Mexico 2-0 South Africa [OK, predicted 2-0]; South Korea 2-1 Czech Republic [OK, predicted 1-1]; Canada 1-1 Bosnia and Herzegovina [X, predicted 2-0]; United States 4-1 Paraguay [X, predicted 1-1]
 - News ingested: 48 teams scanned, 16 out / 10 doubtful
 - Active weights: injuries ×1.0 (12/out, 6/doubtful), climate ×0.0, form half-life 1095d, K_wc=60, sims=20000
 

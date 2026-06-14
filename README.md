@@ -1,6 +1,6 @@
-# wkpool
+# World Cup 2026 Predictor
 
-**Open-source FIFA World Cup 2026 predictor with user-tunable weights.**
+**Open-source FIFA World Cup 2026 predictor with user-tunable weights** (CLI: `wkpool`).
 Built to win your office pool — and to let everyone in that pool run the
 *same* engine with their *own* convictions. The model is the equalizer;
 your information and your weights are the edge.
@@ -21,7 +21,7 @@ distrust anyone claiming 70%.
 ## Quickstart
 
 ```bash
-git clone https://github.com/Vinix24/wkpool && cd wkpool
+git clone https://github.com/Vinix24/world-cup-2026-predictor && cd world-cup-2026-predictor
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
 
@@ -84,11 +84,16 @@ Drop the file in `plugins_user/`, add `my_hunch: 1.0` under
 `plugin_weights`, and your conviction flows coherently into both match
 probabilities and tournament odds.
 
-Two plugins ship built-in:
+Three plugins ship built-in:
 
 - **injuries** — reads structured team-news JSON from `data/news/` and
-  penalizes teams per player out/doubtful/suspended. Stale news expires
-  automatically.
+  penalizes teams per player out/doubtful/suspended. Stale news expires, recent
+  injuries persist across days to dampen scraping noise, and the total penalty
+  per team is capped (`injuries.max_team_penalty`).
+- **odds** — bookmaker consensus, the strongest single covariate in the
+  literature. Reads `data/odds/outright.json` and nudges each team's rating
+  toward the market. Off by default (weight 0.0); `wkpool odds` populates the
+  file from The Odds API.
 - **climate** — the "warm-climate teams cope better with US/Mexico summer
   heat" hypothesis. No published evidence quantifies it, so it ships with
   weight **0.0**. Turn it on if you believe; tell us what it did to your score.
@@ -154,9 +159,9 @@ leakage-free by construction.
 - Third-place bracket seating uses constraint-respecting deterministic
   matching; FIFA's exact priority between equally valid seatings is not public.
 - Penalty shootouts are 50/50 with a small Elo nudge (capped at 60/40).
-- No bookmaker odds: the academic literature says odds are the strongest
-  single covariate, but free redistributable odds feeds don't exist. Adding
-  them via a plugin is the single biggest upgrade available — see roadmap.
+- Bookmaker odds (the strongest single covariate) are supported via the odds
+  plugin but **off by default**, because no odds feed is redistributable — you
+  bring your own via `wkpool odds` (The Odds API key) or a hand-written file.
 
 ## Data sources (downloaded at runtime, never redistributed)
 
@@ -166,24 +171,26 @@ leakage-free by construction.
 | [eloratings.net](https://eloratings.net) conventions | K-factors, home advantage |
 | Official FIFA schedule | groups, 72 fixtures, knockout bracket (static facts in `wkpool/schedule.py`) |
 | Perplexity API (optional) | structured daily team news |
+| [football-data.org](https://www.football-data.org) (optional) | faster WC results feed, closes the upstream lag |
+| [The Odds API](https://the-odds-api.com) (optional) | bookmaker outright odds for the consensus plugin |
 
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `wkpool daily` | full pipeline: download → train → predict → simulate → `PREDICTIONS.md` |
-| `wkpool daily --with-news` | same, plus a fresh news sweep first |
+| `wkpool daily [--public] [--with-news]` | full pipeline → `PREDICTIONS.md`, `NEWS.md`, `TRACK_RECORD.md` |
 | `wkpool download [--force]` | just refresh the results data |
 | `wkpool news [team ...]` | fetch structured team news (default: all 48 teams) |
+| `wkpool odds` | fetch bookmaker outright odds (The Odds API) |
 | `wkpool simulate [--sims N]` | tournament Monte Carlo only, prints the top 15 |
 | `wkpool score` | accuracy + RPS of your logged pre-match predictions |
-| `scripts/install_launchd.sh [H] [M]` | macOS: run daily at H:M with a notification, optional self-mail and auto-push |
+| `scripts/install_launchd.sh ["H:M H:M"]` | macOS: run at those times daily (default 09:15 + 15:15) with notification, self-mail, auto-push |
 
 ## Development
 
 ```bash
 pip install -e ".[dev]"
-pytest                   # 22 tests, incl. all 495 third-place combinations
+pytest                   # 33 tests, incl. all 495 third-place combinations
 ```
 
 PRs welcome — especially new plugins, an odds adapter, and pool-strategy

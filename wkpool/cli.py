@@ -13,7 +13,7 @@ import sys
 
 import pandas as pd
 
-from . import data_io, news, schedule, track
+from . import data_io, news, schedule, sources, track
 from .config import ensure_dirs, load_env, load_weights
 from .elo import EloEngine
 from .model import GoalModel, OutcomeModel, build_training_frame
@@ -60,8 +60,12 @@ def cmd_download(args, weights):
 
 def cmd_news(args, weights):
     teams = args.teams or schedule.all_teams()
-    n = news.fetch_all(teams)
+    n = news.fetch_all(teams, persist_days=int(weights["injuries"]["persist_days"]))
     print(f"news fetched for {n}/{len(teams)} teams")
+
+
+def cmd_odds(args, weights):
+    sources.fetch_outright_odds()
 
 
 def cmd_simulate(args, weights):
@@ -80,7 +84,9 @@ def cmd_simulate(args, weights):
 def cmd_daily(args, weights):
     data_io.download(force=args.force)
     if args.with_news:
-        news.fetch_all(schedule.all_teams())
+        news.fetch_all(schedule.all_teams(),
+                       persist_days=int(weights["injuries"]["persist_days"]))
+        sources.fetch_outright_odds()
     df, outcome, goal_model, ratings, forms, played, metrics = _prepare(weights)
 
     preds = predict_remaining(outcome, goal_model, ratings, forms, weights, played)
@@ -123,6 +129,9 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("news", help="fetch team news via Perplexity")
     p.add_argument("teams", nargs="*", help="default: all 48 teams")
     p.set_defaults(func=cmd_news)
+
+    p = sub.add_parser("odds", help="fetch bookmaker outright odds (The Odds API)")
+    p.set_defaults(func=cmd_odds)
 
     p = sub.add_parser("simulate", help="Monte Carlo tournament simulation")
     p.add_argument("--sims", type=int)

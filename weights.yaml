@@ -24,14 +24,22 @@ form:
 plugin_weights:
   injuries: 1.0
   climate: 0.0             # experimental, no proven effect — off by default
+  odds: 0.0               # bookmaker consensus — strongest covariate in the
+                          # literature; off by default, set ~0.5-1.0 to use it
 
 injuries:
   points_per_out: 12       # Elo penalty per likely starter reported out
   points_per_doubtful: 6   # Elo penalty per doubtful player
   max_news_age_days: 5     # ignore news files older than this
+  persist_days: 3          # carry a reported injury forward N days (dampens LLM noise)
+  max_team_penalty: 30     # cap total injury penalty per team (Elo points)
 
 climate:
   warm_bonus_points: 15    # bonus for warm-climate teams (only if weight > 0)
+
+odds:
+  blend: 60                # max Elo points to nudge a team toward market consensus
+                           # (needs data/odds/outright.json — see `wkpool odds`)
 
 simulation:
   n_sims: 20000            # Monte Carlo tournament runs (100000 for paper-grade)

@@ -43,6 +43,9 @@ class InjuryPlugin:
                 elif inj.get("status") == "doubtful":
                     penalty += float(cfg["points_per_doubtful"])
             penalty += float(cfg["points_per_out"]) * len(report.get("suspensions", []))
+            cap = float(cfg.get("max_team_penalty", 0) or 0)
+            if cap > 0:
+                penalty = min(penalty, cap)  # one team can only be dragged down so far
             if penalty:
                 out[team] = -penalty
         return out
